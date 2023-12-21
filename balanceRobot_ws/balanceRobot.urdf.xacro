@@ -1,12 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?> <!-- Specify this is an xml file using version 1.0-->
+
 <!-- simplistic URDF file for a balance robot -->
 
-<!-- In RVIZ2 
+<!-- INFO: in RVIZ2 
     red is   x-axis
     green is y-axis
     blue is  z-axis
 -->
-<robot name="balanceRobot">
+
+<!-- Specify this is also an xacro extension (macro xml) -->
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="balanceRobot">
 
     <!-- Material color properties -->
     <material name="gray">
