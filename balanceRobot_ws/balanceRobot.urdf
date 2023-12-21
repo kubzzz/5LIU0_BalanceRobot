@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!-- simplistic URDF file for a balance robot -->
+
+<!-- In RVIZ2 
+    red is   x-axis
+    green is y-axis
+    blue is  z-axis
+-->
+<robot name="balanceRobot">
+
+    <!-- Material color properties -->
+    <material name="gray">
+        <color rgba="0.7 0.7 0.7 1.0"/>        
+    </material>
+
+    <material name="red">
+        <color rgba="0.6 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.0 0.6 0.0 1.0"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.0 0.0 0.6 1.0"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+
+    <!-- Links of the robot they describe the (objects/parts) of the robot -->
+    <!-- Link that is on the ground in the middle of the robot (useful for navigation purposes -->
+    <link name="base_footprint"> <!-- Conventional name for this virtual reference link -->
+        <!-- Empty virtual link-->
+    </link>
+
+    <!-- Base link stepper motors with housing -->
+    <link name="base_link"> <!-- Needs to be called base_link (as a first real link)-->
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.083 0.050 0.046"/>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+    </link>
+
+    <!-- Base Plate of the robot where everthing gets mounted -->
+    <link name="basePlate_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.083 0.108 0.007"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <!-- Main body link where battery pack and electronics are mounted -->
+    <link name="body_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.083 0.043 0.170"/>
+            </geometry>
+            <material name="white"/>
+        </visual>      
+    </link>
+
+    <!-- Top Plate link the platform on top of the robot -->
+    <link name="topPlate_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="0.054" length="0.007"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <!-- Link that represents the right wheel-->
+    <link name="right_wheel_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            <geometry>
+                <cylinder radius="0.0375" length="0.024"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <!-- Link that represents the left wheel -->
+    <link name="left_wheel_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            <geometry>
+                <cylinder radius="0.0375" length="0.024"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    
+    <!-- Joints of the robot they attach the links together to make a TF tree -->
+    <!-- Joint that connects the virtual base_footprint and base_link -->
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0375" rpy="0.0 0.0 0.0"/>
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+    </joint>
+
+    <!-- Joint that connects base_link with baseplate -->
+    <joint name="base_plate_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0265" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="basePlate_link"/>
+    </joint>
+
+    <!-- Joint that links the main body with respect to the base_link -->
+    <joint name="base_body_link" type="fixed">
+        <origin xyz="0.0 0.0 0.115" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="body_link"/>
+    </joint>
+
+    <!-- Joint that links the top plate with respect to the base_link -->
+    <joint name="base_topPlate_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.2035" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="topPlate_link"/>
+    </joint>
+
+    <!-- Joint that links the right wheel to the base_link as a continous rotating wheel -->
+    <joint name="right_wheel_joint" type="continuous">
+        <origin xyz="0.0555 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+
+    <!-- Joint that links the left wheel to the base_link as a continous rotating wheel -->
+    <joint name="left_wheel_joint" type="continuous">
+        <origin xyz="-0.0555 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <axis xyz="1.0 0.0 0.0"/> <!-- Let the wheel rotate around the x-axis -->
+    </joint>
+
+</robot>
