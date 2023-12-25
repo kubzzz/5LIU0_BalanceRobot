@@ -12,7 +12,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY launch meshes robot_description src
+  DIRECTORY src launch config robot_description
   DESTINATION share/${PROJECT_NAME}
 )
 
