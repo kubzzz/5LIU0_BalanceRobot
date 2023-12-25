@@ -54,9 +54,10 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <box size="${HSB} ${WSB} ${LSB}"/>
+                <!-- <box size="${HSB} ${WSB} ${LSB}"/> -->
+                <mesh filename="package://balance_robot/meshes/StepperBase.dae"/>
             </geometry>
-            <material name="gray"/>
+            <!-- <material name="gray"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -76,9 +77,10 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <box size="${HBP} ${WBP} ${LBP}"/>
+                <!-- <box size="${HBP} ${WBP} ${LBP}"/> -->
+                <!-- <mesh filename="package://balance_robot/meshes/BasePlate.dae"/> -->
             </geometry>
-            <material name="blue"/>
+            <!-- <material name="blue"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -97,11 +99,12 @@
 
     <link name="frontTipStop_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="${pi*0.28} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 0.0065 0.0" rpy="${(pi*0.28)+(pi/2)} 0.0 ${pi}"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
-                <box size="${HTS} ${WTS} ${LTS}"/>
+                <!-- <box size="${HTS} ${WTS} ${LTS}"/> -->
+                <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
             </geometry>
-            <material name="blue"/>
+            <!-- <material name="blue"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="${pi*0.28} 0.0 0.0"/>
@@ -115,11 +118,12 @@
 
     <link name="backTipStop_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="-${pi*0.28} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 -0.0065 0.0" rpy="${(pi*0.28)-(1.5*pi)} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
-                <box size="${HTS} ${WTS} ${LTS}"/>
+                <!-- <box size="${HTS} ${WTS} ${LTS}"/> -->
+                <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
             </geometry>
-            <material name="blue"/>
+            <!-- <material name="blue"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="-${pi*0.28} 0.0 0.0"/>
@@ -133,15 +137,16 @@
     <!-- The dimension are defined first as parameters -->
     <xacro:property name="HBL" value="0.083"/> <!-- HBL= Height Body Link -->
     <xacro:property name="WBL" value="0.043"/> <!-- WBL= Width Body Link -->
-    <xacro:property name="LBL" value="0.170"/> <!-- LBL= Length Body Link -->
+    <xacro:property name="LBL" value="0.150"/> <!-- LBL= Length Body Link -->
 
     <link name="body_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.00045 0.0 -0.0135" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <box size="${HBL} ${WBL} ${LBL}"/>
+                <!-- <box size="${HBL} ${WBL} ${LBL}"/> -->
+                <mesh filename="package://balance_robot/meshes/MainBody.dae"/>
             </geometry>
-            <material name="white"/>
+            <!-- <material name="white"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -158,11 +163,12 @@
     
     <link name="topPlate_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.0001 -0.0015 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <cylinder radius="${RTP}" length="${LTP}"/>
+                <!-- <cylinder radius="${RTP}" length="${LTP}"/> -->
+                <mesh filename="package://balance_robot/meshes/TopPlate.dae"/>
             </geometry>
-            <material name="blue"/>
+            <!-- <material name="blue"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -179,11 +185,12 @@
 
     <link name="right_wheel_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <cylinder radius="${RW}" length="${LW}"/>
+                <!-- <cylinder radius="${RW}" length="${LW}"/> -->
+                <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
             </geometry>
-            <material name="black"/>
+            <!-- <material name="black"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
@@ -196,11 +203,12 @@
     <!-- Link that represents the left wheel -->
     <link name="left_wheel_link">
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <cylinder radius="${RW}" length="${LW}"/>
+                <!-- <cylinder radius="${RW}" length="${LW}"/> -->
+                <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
             </geometry>
-            <material name="black"/>
+            <!-- <material name="black"/> -->
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
@@ -260,7 +268,7 @@
     <xacro:property name="ODW" value="0.1375"/> <!-- ODW= Outside dimension wheels-->
 
     <joint name="right_wheel_joint" type="continuous">
-        <origin xyz="${(ODW/2)-(LW/2)} 0.0 0.0" rpy="0.0 0.0 0.0"/> <!-- 0.1375/2-0.024/2=0.05675 -->
+        <origin xyz="${(ODW/2)-(LW/2)} 0.0 -0.001" rpy="0.0 0.0 0.0"/> <!-- 0.1375/2-0.024/2=0.05675 -->
         <parent link="base_link"/>
         <child link="right_wheel_link"/>
         <axis xyz="1.0 0.0 0.0"/> <!-- continuous rotation is around the x-axis -->
@@ -268,7 +276,7 @@
 
     <!-- Joint that links the left wheel to the base_link as a continous rotating wheel -->
     <joint name="left_wheel_joint" type="continuous">
-        <origin xyz="-${(ODW/2)-(LW/2)} 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="-${(ODW/2)-(LW/2)} 0.0 -0.001" rpy="0.0 0.0 0.0"/>
         <parent link="base_link"/>
         <child link="left_wheel_link"/>
         <axis xyz="1.0 0.0 0.0"/> <!-- continuous rotation is around the x-axis -->
