@@ -3,10 +3,25 @@
 
 <robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="balance_robot">
 
+   <!-- Parameters
+   <xacro:arg name="use_ros2_control" default="true"/>
+ -->
+   <!-- This file includes the core of the robot -->
    <xacro:include filename="balance_robot_core.xacro"/>
 
+   <!-- Simulating a IMU sensor -->
    <xacro:include filename="IMU_sensor.xacro"/>
-
-   <xacro:include filename="gazebo_control.xacro"/>
-    
+   <xacro:include filename="ros2_control.xacro"/>
+   <!-- Use ros2_control -->
+   <!--
+   <xacro:if value="$(use_ros2_control)">
+      
+   </xacro:if>
+   -->
+   <!-- Use build in Gazebo control -->
+   <!--
+   <xacro:unless value="$(use_ros2_control)">
+      <xacro:include filename="gazebo_control.xacro"/>
+   </xacro:unless>
+   -->
 </robot>

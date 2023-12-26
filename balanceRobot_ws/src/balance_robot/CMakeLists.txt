@@ -25,6 +25,7 @@ install(
 install(
   PROGRAMS
     launch/rsp_sim.launch.py
+    launch/rsp.launch.py
   DESTINATION
     lib/${PROJECT_NAME}
 )

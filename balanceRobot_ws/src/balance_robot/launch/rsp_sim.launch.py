@@ -3,7 +3,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 import xacro
 
@@ -17,8 +17,11 @@ def generate_launch_description():
     file_subpath = 'robot_description/balance_robot.urdf.xacro'
     # rviz_path = 'config/rvizView_config.rviz'
     
+    gazebo_params_file = os.path.join(get_package_share_directory(pkg_name), 'config', 'gazebo_params.yaml')
+    
     # Use xacro to process the (URDF) file
     xacro_file = os.path.join(get_package_share_directory(pkg_name), file_subpath)
+    # robot_description_raw = xacro.process_file(xacro_file).toxml()
     robot_description_raw = xacro.process_file(xacro_file).toxml()
     
     # Configure the node
@@ -41,6 +44,7 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
+            launch_arguments={'extra_gazebo_args': '--ros-args --params-file' + gazebo_params_file}.items()
     )
     
     spawn_entity = Node(
@@ -50,12 +54,28 @@ def generate_launch_description():
         output='screen'
     )
     
+    diff_cont_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=["diff_cont"]
+    )
+    
+    joint_broad_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_broad']
+    )
+    
+    
+    
     
     # Run the node
     return LaunchDescription([
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        rviz
+        rviz,
+        diff_cont_spawner,
+        joint_broad_spawner
     ])
     
