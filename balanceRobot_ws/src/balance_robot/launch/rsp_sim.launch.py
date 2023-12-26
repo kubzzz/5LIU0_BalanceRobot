@@ -3,6 +3,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import xacro
 
@@ -11,8 +12,10 @@ def generate_launch_description():
     
     # Specify the name of the package
     pkg_name = 'balance_robot'
+    
     # Specify path to xacro file within the package
     file_subpath = 'robot_description/balance_robot.urdf.xacro'
+    # rviz_path = 'config/rvizView_config.rviz'
     
     # Use xacro to process the (URDF) file
     xacro_file = os.path.join(get_package_share_directory(pkg_name), file_subpath)
@@ -27,21 +30,32 @@ def generate_launch_description():
         'use_sim_time': True}] # add other parameters here if required
     )
     
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', 'src/balance_robot/config/rvizView_config.rviz']
+    )
+    
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
     )
     
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
-                    arguments=['-topic', 'robot_description',
-                               '-entity', 'balance_robot'],
-                    output='screen')
+    spawn_entity = Node(
+        package='gazebo_ros', 
+        executable='spawn_entity.py',            
+        arguments=['-topic', 'robot_description', '-entity', 'balance_robot'],
+        output='screen'
+    )
     
     
     # Run the node
     return LaunchDescription([
         gazebo,
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        rviz
     ])
     

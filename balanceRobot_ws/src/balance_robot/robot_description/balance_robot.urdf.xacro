@@ -5,6 +5,8 @@
 
    <xacro:include filename="balance_robot_core.xacro"/>
 
+   <xacro:include filename="IMU_sensor.xacro"/>
+
    <xacro:include filename="gazebo_control.xacro"/>
     
 </robot>

@@ -17,6 +17,7 @@
 
     <!-- Put on meshes -->
     <xacro:arg name="use_meshes" default="true"/>
+    <xacro:arg name='use_footprint' default="false"/>
 
     <!-- Material color properties -->
     <material name="gray">
@@ -46,10 +47,11 @@
     <!-- ****************** ROBOT BASE FOOTPRINT ***************************  -->
     <!-- Links of the robot they describe the (objects/parts) of the robot -->
     <!-- Link that is on the ground in the middle of the robot (useful for navigation purposes -->
-    <link name="base_footprint"> <!-- Conventional name for this virtual reference link -->
-        <!-- Empty virtual link-->
-    </link>
-
+    <xacro:if value="$(arg use_footprint)">
+        <link name="base_footprint"> <!-- Conventional name for this virtual reference link -->
+            <!-- Empty virtual link-->
+        </link>
+    </xacro:if>
     <!-- ********************** ROBOT BASE *********************************  -->
     <!-- Base link stepper motors with housing -->
     <!-- The dimensions are defined first as parameters every dimension is in meters -->
@@ -119,7 +121,7 @@
 
     <link name="frontTipStop_link">
         <visual>
-            <origin xyz="0.0 0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 0.001 -0.0075" rpy="${pi + (0.06*pi)} 0.0 ${pi}"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
                     <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
@@ -144,7 +146,7 @@
     <!-- Back Tip Stop of the robot (stopping the robot from tipping over to the back) -->
     <link name="backTipStop_link">
         <visual>
-            <origin xyz="0.0 -0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 -0.001 -0.0075" rpy="${pi + (0.06*pi)} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
                     <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
@@ -195,6 +197,22 @@
         <xacro:inertial_box mass="${MBL}" x="${HBL}" y="${WBL}" z="${LBL}">
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         </xacro:inertial_box>     
+    </link>
+
+    <!-- IMU link that is where the IMU is located -->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="HIL" value="0.0025"/> <!-- HIL= Height IMU Link (Height = x-axis) -->
+    <xacro:property name="WIL" value="0.001"/> <!-- WIL= Width IMU Link (Width = y-axis) -->
+    <xacro:property name="LIL" value="0.003"/> <!-- LIL= Length IMU Link (Length = z-axis) -->
+
+    <link name="imu_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HIL} ${WIL} ${LIL}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
     </link>
 
     <!-- Battery pack link, this is taken as a separate link because the inertia and mass have -->
@@ -329,11 +347,13 @@
     <!-- Joints of the robot they attach the links together to make a TF tree -->
     <!-- Joint that connects the virtual base_footprint and base_link -->
     <!-- This link makes sure the origin is on the ground in the middle of the robot-->
-    <joint name="base_footprint_joint" type="fixed">
-        <origin xyz="0.0 0.0 ${RW}" rpy="0.0 0.0 0.0"/> <!-- Offset is the radius of a (right) wheel -->
-        <parent link="base_footprint"/>
-        <child link="base_link"/>
-    </joint>
+    <xacro:if value="$(arg use_footprint)">
+        <joint name="base_footprint_joint" type="fixed">
+            <origin xyz="0.0 0.0 ${RW}" rpy="0.0 0.0 0.0"/> <!-- Offset is the radius of a (right) wheel -->
+            <parent link="base_footprint"/>
+            <child link="base_link"/>
+        </joint>
+    </xacro:if>
 
     <!-- Joint that connects base_link with baseplate -->
     <joint name="base_plate_joint" type="fixed">
@@ -361,6 +381,13 @@
         <origin xyz="0.0 0.0 ${(LSB/2) + LBP + (LBL/2)}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+LBP+half-LBL (0.023+0.007+0.085)=0.115 -->
         <parent link="base_link"/>
         <child link="body_link"/>
+    </joint>
+
+    <!-- Joint that links the IMU sensor to the main body -->
+    <joint name="body_imu_joint" type="fixed">
+        <origin xyz="0.010 -0.03 0.015" rpy="0.0 0.0 0.0"/>
+        <parent link="body_link"/>
+        <child link="imu_link"/>
     </joint>
 
     <!-- Joint that links the battery pack to the main body -->
