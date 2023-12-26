@@ -17,6 +17,7 @@ install(
     launch 
     config 
     robot_description 
+    meshes
   DESTINATION 
     share/${PROJECT_NAME}
 )

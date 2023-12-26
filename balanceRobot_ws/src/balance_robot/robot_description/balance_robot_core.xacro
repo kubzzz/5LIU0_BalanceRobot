@@ -16,7 +16,7 @@
     <xacro:include filename="inertial_macros.xacro"/>
 
     <!-- Put on meshes -->
-    <xacro:arg name="use_meshes" default="false"/>
+    <xacro:arg name="use_meshes" default="true"/>
 
     <!-- Material color properties -->
     <material name="gray">
@@ -63,7 +63,7 @@
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/StepperBase.dae"/>
+                    <mesh filename="package://balance_robot/meshes/StepperBase.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HSB} ${WSB} ${LSB}"/>
@@ -122,7 +122,7 @@
             <origin xyz="0.0 0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/TipOverStop.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HTS} ${WTS} ${LTS}"/>
@@ -147,7 +147,7 @@
             <origin xyz="0.0 -0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/TipOverStop.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HTS} ${WTS} ${LTS}"/>
@@ -178,7 +178,7 @@
             <origin xyz="0.00045 0.0 -0.0135" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/MainBody.dae"/>
+                    <mesh filename="package://balance_robot/meshes/MainBody.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HBL} ${WBL} ${LBL}"/>
@@ -210,7 +210,7 @@
             <origin xyz="0.0 -0.0075 -0.005" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/PowerBank.dae"/>
+                    <mesh filename="package://balance_robot/meshes/PowerBank.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HBPL} ${WBPL} ${LBPL}"/>
@@ -240,7 +240,7 @@
             <origin xyz="0.0001 -0.0015 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/TopPlate.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TopPlate.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RTP}" length="${LTP}"/>
@@ -276,7 +276,7 @@
             </xacro:unless>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/Wheel.dae"/>
+                    <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RW}" length="${LW}"/>
@@ -306,7 +306,7 @@
             </xacro:unless>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/robot_description/meshes/Wheel.dae"/>
+                    <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RW}" length="${LW}"/>
@@ -407,8 +407,8 @@
     <!-- Make the Tip Over Stops have some amount of friction with respect to the ground -->
     <gazebo reference="frontTipStop_link">
         <material>Gazebo/Blue</material>
-        <mu1 value="1"/>
-        <mu2 value="1"/>
+        <mu1 value="0.5"/>
+        <mu2 value="0.5"/>
     </gazebo>
     <gazebo reference="backTipStop_link">
         <material>Gazebo/Blue</material>
@@ -419,7 +419,7 @@
         <material>Gazebo/White</material>
     </gazebo>
     <gazebo reference="batteryPack_link">
-        <material>Gazebo/Green</material>
+        <material>Gazebo/Gray</material>
     </gazebo>
     <gazebo reference="topPlate_link">
         <material>Gazebo/Blue</material>
