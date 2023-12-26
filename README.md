@@ -9,5 +9,6 @@ RViz2
 
 ROS2 Humble 
 (Extensions)
+sudo apt install python3-colcon-common-extensions
 sudo apt install ros-humble-xacro
 sudo apt install ros-humble-joint-state-publisher-gui

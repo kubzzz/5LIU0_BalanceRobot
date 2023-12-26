@@ -1,0 +1,447 @@
+<?xml version="1.0"?> <!-- Specify this is an xml file using version 1.0-->
+
+<!-- simplistic URDF file for a balance robot -->
+
+<!-- INFO: in RVIZ2 
+    red is   x-axis
+    green is y-axis
+    blue is  z-axis
+-->
+
+<!-- Specify this is also an xacro extension (macro xml) -->
+<!-- Here begins the robot description with tag <robot> -->
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro">
+
+    <!-- Include xacro files -->
+    <xacro:include filename="inertial_macros.xacro"/>
+
+    <!-- Put on meshes -->
+    <xacro:arg name="use_meshes" default="false"/>
+
+    <!-- Material color properties -->
+    <material name="gray">
+        <color rgba="0.5 0.5 0.5 1.0"/>        
+    </material>
+
+    <material name="red">
+        <color rgba="0.6 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.0 0.6 0.0 1.0"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.0 0.0 0.6 1.0"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+    <!-- ****************** ROBOT BASE FOOTPRINT ***************************  -->
+    <!-- Links of the robot they describe the (objects/parts) of the robot -->
+    <!-- Link that is on the ground in the middle of the robot (useful for navigation purposes -->
+    <link name="base_footprint"> <!-- Conventional name for this virtual reference link -->
+        <!-- Empty virtual link-->
+    </link>
+
+    <!-- ********************** ROBOT BASE *********************************  -->
+    <!-- Base link stepper motors with housing -->
+    <!-- The dimensions are defined first as parameters every dimension is in meters -->
+    <xacro:property name="HSB" value="0.083"/> <!-- HSB= Height Stepper Base (Height = x-axis) --> 
+    <xacro:property name="WSB" value="0.050"/> <!-- WSB= Width Stepper Base (Width = y-axis) -->
+    <xacro:property name="LSB" value="0.046"/> <!-- LSB= Length Stepper Base (Length = z-axis) -->
+    <xacro:property name="MSB" value="0.622"/> <!-- MSB= Mass Stepper Base -->
+
+    <link name="base_link"> <!-- Needs to be called base_link (as a first real link in stead of StepperBase) -->
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/StepperBase.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HSB} ${WSB} ${LSB}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HSB} ${WSB} ${LSB}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MSB}" x="${HSB}" y="${WSB}" z="${LSB}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_box> 
+    </link>
+
+    <!-- Base Plate of the robot where everthing gets mounted this geometry is approximated as a box -->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="HBP" value="0.083"/> <!-- HBP= Height Base Plate (Height = x-axis) -->
+    <xacro:property name="WBP" value="0.108"/> <!-- WBP= Width Base Plate (Width = y-axis) -->
+    <xacro:property name="LBP" value="0.007"/> <!-- LBP= Length Base Plate (Length = z-axis) -->
+    <xacro:property name="MBP" value="0.050"/> <!-- MBP= Mass Base Plate -->
+
+    <link name="basePlate_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HBP} ${WBP} ${LBP}"/>
+                <!-- <mesh filename="package://balance_robot/robot_description/meshes/BasePlate.dae"/> -->
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HBP} ${WBP} ${LBP}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MBP}" x="${HBP}" y="${WBP}" z="${LBP}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_box> 
+    </link>
+
+    <!-- Front Tip Stop of the robot (stopping the robot from tipping over to the front) -->
+    <!-- The dimensions are defined first as parameters -->
+    <!-- We heavily simplify this stop as a box -->
+    <xacro:property name="HTS" value="0.020"/> <!-- HTS= Height Tip Stop (Height = x-axis) -->
+    <xacro:property name="WTS" value="0.020"/> <!-- WTS= Width Tip Stop (Width = y-axis) -->
+    <xacro:property name="LTS" value="0.020"/> <!-- LTS= Length Tip Stop (Length = z-axis) -->
+    <xacro:property name="MTS" value="0.020"/> <!-- MTS= Mass Tip Stop -->
+
+    <link name="frontTipStop_link">
+        <visual>
+            <origin xyz="0.0 0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/TipOverStop.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HTS} ${WTS} ${LTS}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0065 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HTS} ${WTS} ${LTS}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MTS}" x="${HTS}" y="${WTS}" z="${LTS}">
+            <origin xyz="0.0 0.0065 0.0" rpy="-${(pi*0.28)} 0.0 0.0"/>
+        </xacro:inertial_box> 
+    </link>
+
+    <!-- Back Tip Stop of the robot (stopping the robot from tipping over to the back) -->
+    <link name="backTipStop_link">
+        <visual>
+            <origin xyz="0.0 -0.0065 0.0" rpy="0.0 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/TipOverStop.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HTS} ${WTS} ${LTS}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 -0.0065 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HTS} ${WTS} ${LTS}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MTS}" x="${HTS}" y="${WTS}" z="${LTS}">
+            <origin xyz="0.0 -0.0065 0.0" rpy="${(pi*0.28)-(1.5*pi)} 0.0 0.0"/>
+        </xacro:inertial_box> 
+    </link>
+
+    <!-- Main body link where battery pack and electronics are mounted -->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="HBL" value="0.083"/> <!-- HBL= Height Body Link (Height = x-axis) -->
+    <xacro:property name="WBL" value="0.043"/> <!-- WBL= Width Body Link (Width = y-axis) -->
+    <xacro:property name="LBL" value="0.150"/> <!-- LBL= Length Body Link (Length = z-axis) -->
+    <xacro:property name="MBL" value="0.127"/> <!-- MBL= Mass Body Link -->
+
+    <link name="body_link">
+        <visual>
+            <origin xyz="0.00045 0.0 -0.0135" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/MainBody.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HBL} ${WBL} ${LBL}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HBL} ${WBL} ${LBL}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MBL}" x="${HBL}" y="${WBL}" z="${LBL}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_box>     
+    </link>
+
+    <!-- Battery pack link, this is taken as a separate link because the inertia and mass have -->
+    <!-- a significant influence on the dynamic behaviour -->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="HBPL" value="0.087"/> <!-- HBPL= Height Battery Pack Link (Height = x-axis) -->
+    <xacro:property name="WBPL" value="0.026"/> <!-- WBPL= Width Battery Pack Link (Width = y-axis) -->
+    <xacro:property name="LBPL" value="0.0936"/> <!-- LBPL= Length Battery Pack Link (Length = z-axis) -->
+    <xacro:property name="MBPL" value="0.265"/> <!-- MBPL= Mass Battery Pack Link -->
+
+    <link name="batteryPack_link">
+        <visual>
+            <origin xyz="0.0 -0.0075 -0.005" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/PowerBank.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HBPL} ${WBPL} ${LBPL}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="green"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 -0.005" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${HBPL} ${WBPL} ${LBPL}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${MBPL}" x="${HBPL}" y="${WBPL}" z="${LBPL}">
+            <origin xyz="0.0 0.0 -0.005" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_box>  
+    </link>
+
+    <!-- Top Plate link the platform on top of the robot -->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="RTP" value="0.054"/> <!-- RPB= Radius Top Plate (Radius = x,y-axis) -->
+    <xacro:property name="LTP" value="0.007"/> <!-- LPB= Length Top Plate (Length = z-axis) -->
+    <xacro:property name="MTP" value="0.059"/> <!-- MTP= Mass Top Plate -->
+    
+    <link name="topPlate_link">
+        <visual>
+            <origin xyz="0.0001 -0.0015 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/TopPlate.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <cylinder radius="${RTP}" length="${LTP}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${RTP}" length="${LTP}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${MTP}" length="${LTP}" radius="${RTP}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- *********************** DRIVE WHEELS ******************************  -->
+    <!-- Link that represents the right wheel-->
+    <!-- The dimensions are defined first as parameters -->
+    <xacro:property name="RW" value="0.0375"/> <!-- RW= Radius Wheel (Radius = x,y-axis) -->
+    <xacro:property name="LW" value="0.024"/> <!-- LW= Length Wheel (Length = z-axis) -->
+    <xacro:property name="MW" value="0.040"/> <!-- MW= Mass Wheel -->
+
+    <link name="right_wheel_link">
+        <visual>
+            <xacro:if value="$(arg use_meshes)">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            </xacro:if>
+            <xacro:unless value="$(arg use_meshes)">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            </xacro:unless>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/Wheel.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <cylinder radius="${RW}" length="${LW}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${RW}" length="${LW}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${MW}" length="${LW}" radius="${RW}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- Link that represents the left wheel -->
+    <link name="left_wheel_link">
+        <visual>
+            <xacro:if value="$(arg use_meshes)">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 ${pi/2} 0.0"/>
+            </xacro:if>
+            <xacro:unless value="$(arg use_meshes)">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            </xacro:unless>
+            <geometry>
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/robot_description/meshes/Wheel.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <cylinder radius="${RW}" length="${LW}"/>
+                </xacro:unless>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${RW}" length="${LW}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${MW}" length="${LW}" radius="${RW}">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    
+    <!-- Joints of the robot they attach the links together to make a TF tree -->
+    <!-- Joint that connects the virtual base_footprint and base_link -->
+    <!-- This link makes sure the origin is on the ground in the middle of the robot-->
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0.0 0.0 ${RW}" rpy="0.0 0.0 0.0"/> <!-- Offset is the radius of a (right) wheel -->
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+    </joint>
+
+    <!-- Joint that connects base_link with baseplate -->
+    <joint name="base_plate_joint" type="fixed">
+        <origin xyz="0.0 0.0 ${(LSB/2) + (LBP/2)}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+half-LBP (0.023+0.0035)=0.0265-->
+        <parent link="base_link"/>
+        <child link="basePlate_link"/>
+    </joint>
+
+    <!-- Joint that connects the frontTipStop with the baseplate -->
+    <joint name="plate_ftip_joint" type="fixed">
+        <origin xyz="0.0 -${(WBP/2)} -${(LTS/2) + (LBP/2)}" rpy="${(pi*0.28)} 0.0 0.0"/> 
+        <parent link="basePlate_link"/>
+        <child link="frontTipStop_link"/>
+    </joint>
+
+    <!-- Joint that connects the backTipStop with the baseplate -->
+    <joint name="plate_btip_joint" type="fixed">
+        <origin xyz="0.0 ${(WBP/2)} -${(LTS/2) + (LBP/2)}" rpy="-${(pi*0.28)} 0.0 0.0"/> 
+        <parent link="basePlate_link"/>
+        <child link="backTipStop_link"/>
+    </joint>
+
+    <!-- Joint that links the main body with respect to the base_link -->
+    <joint name="base_body_joint" type="fixed">
+        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + (LBL/2)}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+LBP+half-LBL (0.023+0.007+0.085)=0.115 -->
+        <parent link="base_link"/>
+        <child link="body_link"/>
+    </joint>
+
+    <!-- Joint that links the battery pack to the main body -->
+    <joint name="body_battery_joint" type="fixed">
+        <origin xyz="0.0 0.002 -0.015" rpy="0.0 0.0 0.0"/> <!-- shift battery pack 2mm to the back 15mm down-->
+        <parent link="body_link"/>
+        <child link="batteryPack_link"/>
+    </joint>
+
+    <!-- Joint that links the top plate with respect to the base_link -->
+    <joint name="base_topPlate_joint" type="fixed">
+        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + LBL + (LTP/2)}" rpy="0.0 0.0 0.0"/> <!-- Half-LSB+LBP+LBL+half-LTP (0.023+0.007+0.17+0.0035=0.2035)-->
+        <parent link="base_link"/>
+        <child link="topPlate_link"/>
+    </joint>
+
+    <!-- Joint that links the right wheel to the base_link as a continous rotating wheel -->
+    <!-- Outside dimensions of wheels measure 137,50mm of the real robot -->
+    <xacro:property name="ODW" value="0.1375"/> <!-- ODW= Outside dimension wheels-->
+
+    <joint name="right_wheel_joint" type="continuous">
+        <origin xyz="${(ODW/2)-(LW/2)} 0.0 -0.001" rpy="0.0 ${pi/2} 0.0"/> <!-- 0.1375/2-0.024/2=0.05675 -->
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <axis xyz="0.0 0.0 1.0"/> <!-- continuous rotation is around the z-axis -->
+    </joint>
+
+    <!-- Joint that links the left wheel to the base_link as a continous rotating wheel -->
+    <joint name="left_wheel_joint" type="continuous">
+        <origin xyz="-${(ODW/2)-(LW/2)} 0.0 -0.001" rpy="0.0 -${pi/2} 0.0"/>
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <axis xyz="0.0 0.0 -1.0"/> <!-- continuous rotation is around the z-axis -->
+    </joint>
+
+    <!-- Gazebo specific code ... -->
+    <!-- Set the Gazebo colors -->
+    <gazebo reference="base_link">
+        <material>Gazebo/Gray</material>
+    </gazebo>
+    <gazebo reference="basePlate_link">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <!-- Make the Tip Over Stops have some amount of friction with respect to the ground -->
+    <gazebo reference="frontTipStop_link">
+        <material>Gazebo/Blue</material>
+        <mu1 value="1"/>
+        <mu2 value="1"/>
+    </gazebo>
+    <gazebo reference="backTipStop_link">
+        <material>Gazebo/Blue</material>
+        <mu1 value="0.5"/>
+        <mu2 value="0.5"/>
+    </gazebo>
+    <gazebo reference="body_link">
+        <material>Gazebo/White</material>
+    </gazebo>
+    <gazebo reference="batteryPack_link">
+        <material>Gazebo/Green</material>
+    </gazebo>
+    <gazebo reference="topPlate_link">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="right_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="left_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!-- Gazebo requires the use of plugins to interact with other systems such as ROS2 -->
+    <!-- This plugin will publish the joint_states for the selected joints
+        (Which robot_state_publisher can use to broadcast the appropiate TF -->
+    <gazebo>
+        <plugin name="gazebo_ros_joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <update_rate>20</update_rate> <!-- Update rate is equal to 20 Hz-->
+            <joint_name>right_wheel_joint</joint_name>
+            <joint_name>left_wheel_joint</joint_name>
+        </plugin>
+    </gazebo>
+
+    <!-- *********************** IMU SETUP *********************************  -->
+
+</robot>

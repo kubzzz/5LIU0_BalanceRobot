@@ -12,8 +12,20 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 install(
-  DIRECTORY src launch config robot_description
-  DESTINATION share/${PROJECT_NAME}
+  DIRECTORY 
+    src 
+    launch 
+    config 
+    robot_description 
+  DESTINATION 
+    share/${PROJECT_NAME}
+)
+
+install(
+  PROGRAMS
+    launch/rsp_sim.launch.py
+  DESTINATION
+    lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
