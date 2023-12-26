@@ -3,6 +3,7 @@ Control project to balance a simple low-cost robot
 
 # The following programs and exetensions are used
 Gazebo version 11.10.2
+install: sudo apt install ros-humble-gazebo-ros-pkgs (to install gazebo with all ros dependencies)
 
 RViz2
 
