@@ -74,8 +74,8 @@ def generate_launch_description():
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
-        rviz,
-        diff_cont_spawner,
-        joint_broad_spawner
+        rviz
+        #diff_cont_spawner,
+        #joint_broad_spawner
     ])
     

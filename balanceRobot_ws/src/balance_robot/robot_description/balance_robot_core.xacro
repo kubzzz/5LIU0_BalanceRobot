@@ -15,10 +15,6 @@
     <!-- Include xacro files -->
     <xacro:include filename="inertial_macros.xacro"/>
 
-    <!-- Put on meshes -->
-    <xacro:arg name="use_meshes" default="true"/>
-    <xacro:arg name='use_footprint' default="false"/>
-
     <!-- Material color properties -->
     <material name="gray">
         <color rgba="0.5 0.5 0.5 1.0"/>        
@@ -95,8 +91,12 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <box size="${HBP} ${WBP} ${LBP}"/>
-                <!-- <mesh filename="package://balance_robot/robot_description/meshes/BasePlate.dae"/> -->
+                <xacro:if value="$(arg use_meshes)">
+                    <mesh filename="package://balance_robot/meshes/BasePlate.dae"/>
+                </xacro:if>
+                <xacro:unless value="$(arg use_meshes)">
+                    <box size="${HBP} ${WBP} ${LBP}"/>
+                </xacro:unless>
             </geometry>
             <material name="blue"/>
         </visual>
@@ -180,7 +180,7 @@
             <origin xyz="0.00045 0.0 -0.0135" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/MainBody.dae"/>
+                    <mesh filename="package://balance_robot/meshes/MainBodyColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HBL} ${WBL} ${LBL}"/>
@@ -294,7 +294,7 @@
             </xacro:unless>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
+                    <mesh filename="package://balance_robot/meshes/WheelColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RW}" length="${LW}"/>
@@ -324,7 +324,7 @@
             </xacro:unless>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/Wheel.dae"/>
+                    <mesh filename="package://balance_robot/meshes/WheelColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RW}" length="${LW}"/>
