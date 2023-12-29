@@ -14,6 +14,13 @@
 #include <AccelStepper.h> // Accel Stepper Library 
 
 #define LED_PIN 13 // Built in LED of Arduino
+
+#define MOTOR_ENABLE 8
+#define STEP_PIN_R 11
+#define DIR_PIN_R 12
+#define STEP_PIN_L 9
+#define DIR_PIN_L 10
+
 #define WIRE Wire1 // Wire=SDA,SCL Wire1=SDA1,SCL1
 
 void print_IMU_data(void);
@@ -22,16 +29,31 @@ void print_IMU_data(void);
 ICM42688 IMU(WIRE, 0x68);
 
 /* Making an motor object where pin(11)=STEP pin(12)=DIR */
-AccelStepper motorR(1, 11, 12);
+AccelStepper motor_right(AccelStepper::DRIVER, STEP_PIN_R, DIR_PIN_R);
+AccelStepper motor_left(AccelStepper::DRIVER, STEP_PIN_L, DIR_PIN_L);
+
+int incomingByte = 0;
+int number;
+const unsigned int MAX_MESSAGE_LENGTH = 5;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200); // begin serial communication to read data from the arduino
   while (!Serial) {}
 
-  motorR.setEnablePin(8);
-  motorR.setMaxSpeed(500);
-  motorR.setSpeed(50);
+  pinMode(MOTOR_ENABLE, OUTPUT);
+  digitalWrite(MOTOR_ENABLE, HIGH); // set HIGH to disable drivers set LOW to enable
+
+  /* Set max velocity */
+  motor_right.setMaxSpeed(3000);
+  motor_left.setMaxSpeed(3000);
+
+  /* Set acceleration */
+  motor_right.setAcceleration(1);
+  motor_left.setAcceleration(1);
+
+  motor_left.setSpeed(-3000);
+  motor_right.setSpeed(3000);
   
   int status = IMU.begin();
   /* Check if the IMU is correctly working */
@@ -60,7 +82,43 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  motorR.runSpeed();
+  while (Serial.available() > 0)
+ {
+   //Create a place to hold the incoming message
+   static char message[MAX_MESSAGE_LENGTH];
+   static unsigned int message_pos = 0;
+   //Read the next available byte in the serial receive buffer
+   char inByte = Serial.read();
+   //Message coming in (check not terminating character) and guard for over message size
+   if ( inByte != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1) )
+   {
+     //Add the incoming byte to our message
+     message[message_pos] = inByte;
+     message_pos++;
+   }
+   //Full message received...
+   else
+   {
+    //Add null character to string
+    message[message_pos] = '\0';
+    //Print the message (or do other things)
+    Serial.println(message);
+    //Or convert to integer and print
+    number = atoi(message);
+    Serial.println(number);
+    //Reset for the next message
+    message_pos = 0;
+   }
+ }
+
+
+  motor_left.setSpeed(-number);
+  motor_right.setSpeed(number);
+
+  motor_right.runSpeed();
+  motor_left.runSpeed();
+
+  // print_IMU_data();
 
   
 }
