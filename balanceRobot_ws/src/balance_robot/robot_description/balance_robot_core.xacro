@@ -425,38 +425,46 @@
 
     <!-- Gazebo specific code ... -->
     <!-- Set the Gazebo colors -->
-    <gazebo reference="base_link">
-        <material>Gazebo/Gray</material>
-    </gazebo>
-    <gazebo reference="basePlate_link">
-        <material>Gazebo/Blue</material>
-    </gazebo>
+    <xacro:if value="$(arg use_gazebo_colors)">
+        <gazebo reference="base_link">
+            <material>Gazebo/Gray</material>
+        </gazebo>
+        <gazebo reference="basePlate_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+    </xacro:if>
     <!-- Make the Tip Over Stops have some amount of friction with respect to the ground -->
     <gazebo reference="frontTipStop_link">
-        <material>Gazebo/Blue</material>
+        <xacro:if value="$(arg use_gazebo_colors)">
+            <material>Gazebo/Blue</material>
+        </xacro:if>
         <mu1 value="0.5"/>
         <mu2 value="0.5"/>
     </gazebo>
     <gazebo reference="backTipStop_link">
-        <material>Gazebo/Blue</material>
+        <xacro:if value="$(arg use_gazebo_colors)">    
+            <material>Gazebo/Blue</material>
+        </xacro:if>
         <mu1 value="0.5"/>
         <mu2 value="0.5"/>
     </gazebo>
-    <gazebo reference="body_link">
-        <material>Gazebo/White</material>
-    </gazebo>
-    <gazebo reference="batteryPack_link">
-        <material>Gazebo/Gray</material>
-    </gazebo>
-    <gazebo reference="topPlate_link">
-        <material>Gazebo/Blue</material>
-    </gazebo>
-    <gazebo reference="right_wheel_link">
-        <material>Gazebo/Black</material>
-    </gazebo>
-    <gazebo reference="left_wheel_link">
-        <material>Gazebo/Black</material>
-    </gazebo>
+    <xacro:if value="$(arg use_gazebo_colors)">
+        <gazebo reference="body_link">
+            <material>Gazebo/White</material>
+        </gazebo>
+        <gazebo reference="batteryPack_link">
+            <material>Gazebo/Gray</material>
+        </gazebo>
+        <gazebo reference="topPlate_link">
+            <material>Gazebo/Blue</material>
+        </gazebo>
+        <gazebo reference="right_wheel_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+        <gazebo reference="left_wheel_link">
+            <material>Gazebo/Black</material>
+        </gazebo>
+    </xacro:if>
 
     <!-- Gazebo requires the use of plugins to interact with other systems such as ROS2 -->
     <!-- This plugin will publish the joint_states for the selected joints
@@ -468,7 +476,5 @@
             <joint_name>left_wheel_joint</joint_name>
         </plugin>
     </gazebo>
-
-    <!-- *********************** IMU SETUP *********************************  -->
 
 </robot>

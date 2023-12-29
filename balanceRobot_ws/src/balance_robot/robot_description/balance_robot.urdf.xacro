@@ -7,6 +7,7 @@
    <xacro:arg name="use_meshes" default="true"/> <!-- Put on meshes -->
    <xacro:arg name='use_footprint' default="false"/> <!-- Use footpriny link -->
    <xacro:arg name="use_ros2_control" default="false"/> <!-- Use ros2_control -->
+   <xacro:arg name="use_gazebo_colors" default="false"/> <!-- Use Gazebo collors -->
 
    <!-- This file includes the core of the robot -->
    <xacro:include filename="balance_robot_core.xacro"/>
