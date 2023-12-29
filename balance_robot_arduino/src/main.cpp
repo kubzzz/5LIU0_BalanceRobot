@@ -10,8 +10,9 @@
  */
 #include <Arduino.h>
 #include <ICM42688.h>     // ICM42688 IMU Library
-//#include <TMC2209.h>      // TMC2209 stepper drivers Library
+#include <TMC2209.h>      // TMC2209 stepper drivers Library (wrote softwareserial to false)
 #include <AccelStepper.h> // Accel Stepper Library 
+#include <TMCStepper.h>
 
 #define LED_PIN 13 // Built in LED of Arduino
 
@@ -21,6 +22,11 @@
 #define STEP_PIN_L 9
 #define DIR_PIN_L 10
 
+#define SERIAL_BAUD_RATE 115200
+#define DRIVER_ADDRESS 0b10
+#define SERIAL_PORT Serial1
+#define R_SENSE 0.11f
+
 #define WIRE Wire1 // Wire=SDA,SCL Wire1=SDA1,SCL1
 
 void print_IMU_data(void);
@@ -28,33 +34,51 @@ void print_IMU_data(void);
 /* Making IMU object with I2C channel (Wire1) and address (0x68) */
 ICM42688 IMU(WIRE, 0x68);
 
-/* Making an motor object where pin(11)=STEP pin(12)=DIR */
-AccelStepper motor_right(AccelStepper::DRIVER, STEP_PIN_R, DIR_PIN_R);
-AccelStepper motor_left(AccelStepper::DRIVER, STEP_PIN_L, DIR_PIN_L);
+/* Making an motor object */
+AccelStepper motor_right = AccelStepper(motor_right.DRIVER, STEP_PIN_R, DIR_PIN_R);
+AccelStepper motor_left = AccelStepper(motor_left.DRIVER, STEP_PIN_L, DIR_PIN_L);
 
-int incomingByte = 0;
-int number;
-const unsigned int MAX_MESSAGE_LENGTH = 5;
+/* Enable the UART communication with TMC2209 */
+TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
+
+int speed;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(115200); // begin serial communication to read data from the arduino
+  pinMode(STEP_PIN_R, OUTPUT);
+  pinMode(DIR_PIN_R, OUTPUT);
+  pinMode(STEP_PIN_L, OUTPUT);
+  pinMode(DIR_PIN_L, OUTPUT);
+  pinMode(MOTOR_ENABLE, OUTPUT);
+  digitalWrite(MOTOR_ENABLE, LOW); // set HIGH to disable drivers set LOW to enable
+  Serial.begin(SERIAL_BAUD_RATE); // begin serial communication to read data from the arduino
   while (!Serial) {}
 
-  pinMode(MOTOR_ENABLE, OUTPUT);
-  digitalWrite(MOTOR_ENABLE, HIGH); // set HIGH to disable drivers set LOW to enable
+  /* Begin serial communication with TMC2209 drivers */
+  SERIAL_PORT.begin(SERIAL_BAUD_RATE);
+  driver.begin();
+  //driver.toff(5);
+  driver.rms_current(1000); // set current in mA
+  driver.microsteps(16); // set micro step in 1/16th 
+  driver.pwm_autoscale(true);
 
-  /* Set max velocity */
-  motor_right.setMaxSpeed(3000);
-  motor_left.setMaxSpeed(3000);
+  /* Set Max Speed is in steps per second */ 
+  motor_right.setMaxSpeed(5000); // 100mm/s @ 80 steps/mm
+  motor_left.setMaxSpeed(5000);
 
-  /* Set acceleration */
-  motor_right.setAcceleration(1);
-  motor_left.setAcceleration(1);
+  /* Set Acceleration in steps per second squared */
+  motor_right.setAcceleration(200); // 2000mm/s^2
+  motor_left.setAcceleration(200);
+  //stepper.setEnablePin(EN_PIN);
 
-  motor_left.setSpeed(-3000);
-  motor_right.setSpeed(3000);
-  
+  /* direction, step, enable inverted */
+  motor_right.setPinsInverted(false, false, true);
+  motor_left.setPinsInverted(true, false, true);
+
+  motor_right.enableOutputs();
+  motor_left.enableOutputs();
+
+
   int status = IMU.begin();
   /* Check if the IMU is correctly working */
   if (status < 0) {
@@ -64,6 +88,7 @@ void setup() {
     Serial.println(status);
     while(1) {}
   }
+  Serial.println("Succesfull initialized IMU");
 
   // setting the accelerometer full scale range to +/-8G
   IMU.setAccelFS(ICM42688::gpm8);
@@ -78,46 +103,25 @@ void setup() {
 
 
 }
-
+bool shaft = false;
 void loop() {
   // put your main code here, to run repeatedly:
 
-  while (Serial.available() > 0)
- {
-   //Create a place to hold the incoming message
-   static char message[MAX_MESSAGE_LENGTH];
-   static unsigned int message_pos = 0;
-   //Read the next available byte in the serial receive buffer
-   char inByte = Serial.read();
-   //Message coming in (check not terminating character) and guard for over message size
-   if ( inByte != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1) )
-   {
-     //Add the incoming byte to our message
-     message[message_pos] = inByte;
-     message_pos++;
-   }
-   //Full message received...
-   else
-   {
-    //Add null character to string
-    message[message_pos] = '\0';
-    //Print the message (or do other things)
-    Serial.println(message);
-    //Or convert to integer and print
-    number = atoi(message);
-    Serial.println(number);
-    //Reset for the next message
-    message_pos = 0;
-   }
- }
-
-
-  motor_left.setSpeed(-number);
-  motor_right.setSpeed(number);
-
-  motor_right.runSpeed();
-  motor_left.runSpeed();
-
+  if (Serial.available() > 0)
+  {
+    speed = Serial.parseInt();
+  
+    // Print speed output
+    Serial.print("Current Speed ");                 
+    Serial.print(speed);
+    Serial.println(" steps per second.");
+   
+  }
+  motor_right.setSpeed(speed);
+  motor_left.setSpeed(speed);
+  
+  motor_right.run();
+  motor_left.run();
   // print_IMU_data();
 
   
