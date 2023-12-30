@@ -51,19 +51,19 @@ sudo apt install ros-humble-teleop-twist-keyboard
 ```
 
 # How to run the package
-#### 1: First make sure you installed all above programs 
+### 1: First make sure you installed all above programs 
 
-#### 2: Clone the repository: (for example in home folder)
+### 2: Clone the repository: (for example in home folder)
 https://github.com/kubzzz/5LIU0_BalanceRobot.git
 
-#### 3: Copy the models in gazebo folder
+### 3: Copy the models in gazebo folder
 navigate to repository home folder (5LIU0_BalanceRobot)
 ```
 cp -r Gazebo/balance_robot/ $HOME/.gazebo/models/
 ```
 to put all models in the gazebo directory
 
-#### 4: Make the ros package
+### 4: Make the ros package
 navigate to the ros workspace directory
 ```
 cd $HOME/5LIU0_BalanceRobot/balanceRobot_ws
@@ -77,14 +77,14 @@ Source the package with
 source install/setup.bash
 ```
 
-#### 5: Run the simulation launch file
+### 5: Run the simulation launch file
 make sure your still in the ros workspace directory (balanceRobot_ws)
 ```
 ros2 launch balance_robot rsp_sim.launch.py
 ```
 Now Gazebo and RViz should open up and start the robot simulation
 
-#### 6: Control the robot with your keyboard
+### 6: Control the robot with your keyboard
 make sure your still in the ros workspace directory (balanceRobot_ws)
 ```
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
