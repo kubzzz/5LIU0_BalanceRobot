@@ -61,7 +61,7 @@
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/StepperBase.dae"/>
+                    <mesh filename="package://balance_robot/meshes/StepperBaseV1Color.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HSB} ${WSB} ${LSB}"/>
@@ -121,10 +121,10 @@
 
     <link name="frontTipStop_link">
         <visual>
-            <origin xyz="0.0 0.001 -0.0075" rpy="${pi + (0.06*pi)} 0.0 ${pi}"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 0.005 -0.004" rpy="${pi + (0.03*pi)} 0.0 ${pi}"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TipOverStopColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HTS} ${WTS} ${LTS}"/>
@@ -146,10 +146,10 @@
     <!-- Back Tip Stop of the robot (stopping the robot from tipping over to the back) -->
     <link name="backTipStop_link">
         <visual>
-            <origin xyz="0.0 -0.001 -0.0075" rpy="${pi + (0.06*pi)} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
+            <origin xyz="0.0 -0.005 -0.004" rpy="${pi + (0.03*pi)} 0.0 0.0"/> <!-- turned 50 degrees on x-axis -->
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/TipOverStop.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TipOverStopColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HTS} ${WTS} ${LTS}"/>
@@ -180,7 +180,7 @@
             <origin xyz="0.00045 0.0 -0.0135" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/MainBodyColor.dae"/>
+                    <mesh filename="package://balance_robot/meshes/MainBodyV1Color.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HBL} ${WBL} ${LBL}"/>
@@ -228,7 +228,7 @@
             <origin xyz="0.0 -0.0075 -0.005" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/PowerBank.dae"/>
+                    <mesh filename="package://balance_robot/meshes/PowerBankColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <box size="${HBPL} ${WBPL} ${LBPL}"/>
@@ -258,7 +258,7 @@
             <origin xyz="0.0001 -0.0015 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <xacro:if value="$(arg use_meshes)">
-                    <mesh filename="package://balance_robot/meshes/TopPlate.dae"/>
+                    <mesh filename="package://balance_robot/meshes/TopPlateColor.dae"/>
                 </xacro:if>
                 <xacro:unless value="$(arg use_meshes)">
                     <cylinder radius="${RTP}" length="${LTP}"/>
@@ -343,6 +343,7 @@
         </xacro:inertial_cylinder>
     </link>
 
+    <xacro:property name="Z_OFFZ" value="0.002"/>
     
     <!-- Joints of the robot they attach the links together to make a TF tree -->
     <!-- Joint that connects the virtual base_footprint and base_link -->
@@ -357,28 +358,28 @@
 
     <!-- Joint that connects base_link with baseplate -->
     <joint name="base_plate_joint" type="fixed">
-        <origin xyz="0.0 0.0 ${(LSB/2) + (LBP/2)}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+half-LBP (0.023+0.0035)=0.0265-->
+        <origin xyz="0.0 0.0 ${(LSB/2) + (LBP/2)-Z_OFFZ}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+half-LBP (0.023+0.0035)=0.0265-->
         <parent link="base_link"/>
         <child link="basePlate_link"/>
     </joint>
 
     <!-- Joint that connects the frontTipStop with the baseplate -->
     <joint name="plate_ftip_joint" type="fixed">
-        <origin xyz="0.0 -${(WBP/2)} -${(LTS/2) + (LBP/2)}" rpy="${(pi*0.28)} 0.0 0.0"/> 
+        <origin xyz="0.0 -${(WBP/2)} -0.015" rpy="${(pi*0.25)} 0.0 0.0"/> 
         <parent link="basePlate_link"/>
         <child link="frontTipStop_link"/>
     </joint>
 
     <!-- Joint that connects the backTipStop with the baseplate -->
     <joint name="plate_btip_joint" type="fixed">
-        <origin xyz="0.0 ${(WBP/2)} -${(LTS/2) + (LBP/2)}" rpy="-${(pi*0.28)} 0.0 0.0"/> 
+        <origin xyz="0.0 ${(WBP/2)} -0.015" rpy="-${(pi*0.25)} 0.0 0.0"/> 
         <parent link="basePlate_link"/>
         <child link="backTipStop_link"/>
     </joint>
 
     <!-- Joint that links the main body with respect to the base_link -->
     <joint name="base_body_joint" type="fixed">
-        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + (LBL/2)}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+LBP+half-LBL (0.023+0.007+0.085)=0.115 -->
+        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + (LBL/2)-0.001-Z_OFFZ}" rpy="0.0 0.0 0.0"/> <!-- half-LSB+LBP+half-LBL (0.023+0.007+0.085)=0.115 -->
         <parent link="base_link"/>
         <child link="body_link"/>
     </joint>
@@ -399,7 +400,7 @@
 
     <!-- Joint that links the top plate with respect to the base_link -->
     <joint name="base_topPlate_joint" type="fixed">
-        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + LBL + (LTP/2)}" rpy="0.0 0.0 0.0"/> <!-- Half-LSB+LBP+LBL+half-LTP (0.023+0.007+0.17+0.0035=0.2035)-->
+        <origin xyz="0.0 0.0 ${(LSB/2) + LBP + LBL + (LTP/2)-0.0035}" rpy="0.0 0.0 0.0"/> <!-- Half-LSB+LBP+LBL+half-LTP (0.023+0.007+0.17+0.0035=0.2035)-->
         <parent link="base_link"/>
         <child link="topPlate_link"/>
     </joint>
