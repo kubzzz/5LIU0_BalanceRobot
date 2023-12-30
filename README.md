@@ -1,45 +1,50 @@
 # 5LIU0_BalanceRobot
 Control project to balance a simple low-cost robot
 
+Authors: Martijn Strolenberg
+         Tom Janssen-Bouwmeester
+
 ## The following programs and exetensions are used
-### Gazebo version 11.10.2
+## ROS2  
+### 1: ROS2 humble
+To install ROS2 humble you can follow the official website instructions
+install:
+https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+
+
+### 2: Gazebo version 11.10.2
 install: 
 ```
 sudo apt install ros-humble-gazebo-ros-pkgs 
 ```
 (to install gazebo with all ros dependencies)
 
-### RViz2
+### 3: RViz2
 install: 
 ```
 sudo apt install ros-humble-rviz2
 ```
 
-### ROS2  
-#### 1: ROS2 humble
-install:
-https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
-
-(Extensions)
-#### 2: Colcon
+(ROS Extensions)
+#### 4: Colcon
 install:
 ```
 sudo apt install python3-colcon-common-extensions
 ```
 
-#### 3: Robot discription
+#### 5: Robot discription
 install:
 ```
 sudo apt install ros-humble-xacro ros-humble-joint-state-publisher-gui ros-humble-urdf-tutorial
 ```
 
-#### 4: ROS2_Control
+#### 6: ROS2_Control
 install:
 ```
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
 ```
 
-#### 5: teleop_key
+#### 7: teleop_key
 install:
 ```
 sudo apt install ros-humble-teleop-twist-keyboard
