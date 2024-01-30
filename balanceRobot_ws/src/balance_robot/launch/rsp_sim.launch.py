@@ -50,7 +50,11 @@ def generate_launch_description():
     spawn_entity = Node(
         package='gazebo_ros', 
         executable='spawn_entity.py',            
-        arguments=['-topic', 'robot_description', '-entity', 'balance_robot'],
+        arguments=['-topic', 'robot_description', '-entity', 'balance_robot',
+                   '-x', '0.0',
+                   '-y', '0.0',
+                   '-z', '0.0',
+                   '-Y', '0.0'],
         output='screen'
     )
     
@@ -66,9 +70,7 @@ def generate_launch_description():
         arguments=['joint_broad']
     )
     
-    
-    
-    
+        
     # Run the node
     return LaunchDescription([
         gazebo,
