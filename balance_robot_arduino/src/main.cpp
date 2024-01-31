@@ -8,28 +8,33 @@
  * I2C Device at address 0x1E, 0x68, 0x7E found
  *
  */
+
+/* Libraries used */
 #include <Arduino.h>
 #include <ICM42688.h>     // ICM42688 IMU Library
 #include <TMC2209.h>      // TMC2209 stepper drivers Library (wrote softwareserial to false)
 #include <AccelStepper.h> // Accel Stepper Library 
 #include <TMCStepper.h>
 
+/* common defines */
 #define LED_PIN 13 // Built in LED of Arduino
 
-#define MOTOR_ENABLE 8
+#define MOTOR_ENABLE_PIN 8
 #define STEP_PIN_R 11
 #define DIR_PIN_R 12
 #define STEP_PIN_L 9
 #define DIR_PIN_L 10
 
 #define SERIAL_BAUD_RATE 115200
-#define DRIVER_ADDRESS 0b10
-#define SERIAL_PORT Serial1
-#define R_SENSE 0.11f
+#define DRIVER_ADDRESS 0b10 // UART address of a TMC2209 driver defined by MS1 and MS2 
+#define SERIAL_PORT Serial1 //Hardware serial used Serial1-->(TX=18, RX=19)
+#define R_SENSE 0.11f // current sense resistor used (0.11ohm)
 
-#define WIRE Wire1 // Wire=SDA,SCL Wire1=SDA1,SCL1
+#define MICRO_STEPS 16
 
-void print_IMU_data(void);
+#define WIRE Wire1 // Wire->(SDA, SCL) Wire1-->(SDA1, SCL1)
+
+void print_IMU_data(void); // Function to print IMU data
 
 /* Making IMU object with I2C channel (Wire1) and address (0x68) */
 ICM42688 IMU(WIRE, 0x68);
@@ -38,19 +43,21 @@ ICM42688 IMU(WIRE, 0x68);
 AccelStepper motor_right = AccelStepper(motor_right.DRIVER, STEP_PIN_R, DIR_PIN_R);
 AccelStepper motor_left = AccelStepper(motor_left.DRIVER, STEP_PIN_L, DIR_PIN_L);
 
-/* Enable the UART communication with TMC2209 */
+/* Enable the UART communication with TMC2209 driver */
 TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 
-int speed;
+int speed; // speed variable
 
 void setup() {
   // put your setup code here, to run once:
+  /* Set pinModes */
   pinMode(STEP_PIN_R, OUTPUT);
   pinMode(DIR_PIN_R, OUTPUT);
   pinMode(STEP_PIN_L, OUTPUT);
   pinMode(DIR_PIN_L, OUTPUT);
-  pinMode(MOTOR_ENABLE, OUTPUT);
-  digitalWrite(MOTOR_ENABLE, LOW); // set HIGH to disable drivers set LOW to enable
+  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+
+  digitalWrite(MOTOR_ENABLE_PIN, LOW); // set HIGH to disable drivers set LOW to enable
   Serial.begin(SERIAL_BAUD_RATE); // begin serial communication to read data from the arduino
   while (!Serial) {}
 
@@ -59,7 +66,7 @@ void setup() {
   driver.begin();
   //driver.toff(5);
   driver.rms_current(1000); // set current in mA
-  driver.microsteps(16); // set micro step in 1/16th 
+  driver.microsteps(MICRO_STEPS); // set micro step in 1/MICRO_STEPS steps
   driver.pwm_autoscale(true);
 
   /* Set Max Speed is in steps per second */ 
