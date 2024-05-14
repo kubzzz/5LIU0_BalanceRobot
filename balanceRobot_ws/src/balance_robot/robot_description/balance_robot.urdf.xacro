@@ -1,0 +1,28 @@
+<?xml version="1.0"?> <!-- Specify this is an xml file using version 1.0-->
+
+
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="balance_robot">
+
+   <!-- URDF custom parameters -->
+   <xacro:arg name="use_meshes" default="true"/> <!-- Put on meshes -->
+   <xacro:arg name='use_footprint' default="false"/> <!-- Use footpriny link -->
+   <xacro:arg name="use_ros2_control" default="false"/> <!-- Use ros2_control -->
+   <xacro:arg name="use_gazebo_colors" default="false"/> <!-- Use Gazebo collors -->
+
+   <!-- This file includes the core of the robot -->
+   <xacro:include filename="balance_robot_core.xacro"/>
+
+   <!-- Simulating a IMU sensor -->
+   <xacro:include filename="IMU_sensor.xacro"/>
+   
+   <!-- Use ros2_control -->
+   <xacro:if value="$(arg use_ros2_control)">
+      <xacro:include filename="ros2_control.xacro"/>
+   </xacro:if>
+
+   <!-- Use build in Gazebo control -->
+   <xacro:unless value="$(arg use_ros2_control)">
+      <xacro:include filename="gazebo_control.xacro"/>
+   </xacro:unless>
+
+</robot>
