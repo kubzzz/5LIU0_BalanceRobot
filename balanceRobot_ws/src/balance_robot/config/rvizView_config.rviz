@@ -5,9 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /RobotModel1/Status1
       Splitter Ratio: 0.5
-    Tree Height: 792
+    Tree Height: 214
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -62,10 +61,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
@@ -123,8 +118,6 @@ Visualization Manager:
           Value: true
         basePlate_link:
           Value: true
-        base_footprint:
-          Value: true
         base_link:
           Value: true
         batteryPack_link:
@@ -149,8 +142,6 @@ Visualization Manager:
       Show Axes: false
       Show Names: false
       Tree:
-        base_footprint:
-          {}
         odom:
           base_link:
             basePlate_link:
@@ -170,25 +161,6 @@ Visualization Manager:
             topPlate_link:
               {}
       Update Interval: 0
-      Value: true
-    - Alpha: 1
-      Angular Arrow Scale: 2
-      Angular Color: 204; 204; 51
-      Arrow Width: 0.5
-      Class: rviz_default_plugins/AccelStamped
-      Enabled: true
-      Hide Small Values: true
-      History Length: 1
-      Linear Arrow Scale: 2
-      Linear Color: 204; 51; 51
-      Name: AccelStamped
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        Filter size: 10
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /imu_plugin/out
       Value: true
   Enabled: true
   Global Options:
@@ -228,12 +200,12 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 2032
+  Height: 836
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000031c00000754fc0200000002fb000000100044006900730070006c006100790073010000006e000004100000018200fffffffb0000000a00560069006500770073010000048a000003380000013200ffffff000008fc0000075400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000001000000000000031c000002eafc0200000002fb000000100044006900730070006c006100790073010000003d0000019d000000c900fffffffb0000000a0056006900650077007301000001e000000147000000a400ffffff000002d8000002ea00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 3108
-  X: 3972
-  Y: 54
+  Width: 1530
+  X: 70
+  Y: 27
