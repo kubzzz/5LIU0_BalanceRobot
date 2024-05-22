@@ -5,10 +5,10 @@ Authors: Martijn Strolenberg
 
 ## The following programs and exetensions are used
 ## ROS2  
-### 1: ROS2 humble
-To install ROS2 humble you can follow the official website instructions
+### 1: ROS2 rolling
+To install ROS2 rolling you can follow the official website instructions
 install:
-https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+https://docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debians.html
 
 
 ### 2: Gazebo version 11.10.2
