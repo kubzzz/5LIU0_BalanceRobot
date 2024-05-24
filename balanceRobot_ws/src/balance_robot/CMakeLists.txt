@@ -7,9 +7,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+add_executable(imu_subscriber src/imu_sub.cpp)
+ament_target_dependencies(imu_subscriber rclcpp sensor_msgs)
+
+install(TARGETS
+  imu_subscriber
+  DESTINATION lib/${PROJECT_NAME})
 
 install(
   DIRECTORY 

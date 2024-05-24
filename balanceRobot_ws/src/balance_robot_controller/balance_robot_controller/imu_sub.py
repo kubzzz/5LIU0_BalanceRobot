@@ -23,20 +23,17 @@ class ImuSubscriberNode(Node):
         a_z = msg.linear_acceleration.z
         phi = math.atan2(a_y, a_z)*57.295780
         
-        
         theta = (0.95 * (theta_prev + (g_x * (period)))) + (0.05 * phi)
         
         theta_prev = theta # does not work :(
         time_prev = time
         
-
         self.get_logger().info(str(phi))
         self.get_logger().info(str(theta))
 
 def main(args=None):
     rclpy.init(args=args)
-
+    
     node = ImuSubscriberNode()
     rclpy.spin(node)
-
     rclpy.shutdown()
