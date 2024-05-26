@@ -7,13 +7,13 @@
         <gravity>true</gravity>
         <sensor name="imu_sensor" type="imu">
             <always_on>true</always_on>
-            <update_rate>20</update_rate>
+            <update_rate>200</update_rate>
             <visualize>true</visualize>
             <topic>imu_data</topic>
             <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
             <topicName>imu</topicName>
             <bodyName>imu_link</bodyName>
-            <updateRateHZ>20.0</updateRateHZ>
+            <updateRateHZ>200.0</updateRateHZ>
             <gaussianNoise>0.0</gaussianNoise>
             <xyzOffset>0 0 0</xyzOffset>
             <rpyOffset>0 0 0</rpyOffset>

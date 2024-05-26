@@ -5,7 +5,7 @@
 
 using std::placeholders::_1;
 
-uint32_t time_prev = 0;
+float time_prev = 0;
 float theta_prev = 0;
 
 class ImuSubscriber : public rclcpp::Node
@@ -21,11 +21,11 @@ class ImuSubscriber : public rclcpp::Node
     private:
         void topic_callback(const sensor_msgs::msg::Imu::SharedPtr msg) const
         {
-            uint32_t time_nanosec = msg->header.stamp.nanosec;
-            int32_t time_sec = msg->header.stamp.sec;
+            float time_nanosec = msg->header.stamp.nanosec;
+            float time_sec = msg->header.stamp.sec;
 
-            uint32_t time = time_sec + (time_nanosec / 1000000000);
-            uint32_t period = (time - time_prev);
+            float time = time_sec + (time_nanosec / 1000000000);
+            float period = (time - time_prev);
 
             float g_x = msg->angular_velocity.x;
             float a_y = msg->linear_acceleration.y;
@@ -35,8 +35,11 @@ class ImuSubscriber : public rclcpp::Node
 
             float theta = (0.95 * (theta_prev + (g_x * (period)))) + (0.05 * phi);
 
+            time_prev = time;
+            theta_prev = theta;
+
             RCLCPP_INFO(this->get_logger(), "phi: %f", phi);
-            RCLCPP_INFO(this->get_logger(), "period: %d", period);
+            RCLCPP_INFO(this->get_logger(), "period: %f", period);
             RCLCPP_INFO(this->get_logger(), "theta: %f", theta);
         }
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscription_;
