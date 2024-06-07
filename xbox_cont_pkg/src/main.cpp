@@ -67,10 +67,7 @@ int main(int argc, char **argv)
   print("NumInterfaces={}\n", config_desc->bNumInterfaces);
   print("NumEndpoints={}\n", config_desc->interface->altsetting->bInterfaceNumber);
 
-
-  libusb_interface_descriptor interface_desc;
-
-  libusb_endpoint_descriptor endpoint_desc;
+  uint8_t interfaceNum;
 
   for (uint8_t InterfaceNum = 0; InterfaceNum < config_desc->bNumInterfaces; InterfaceNum++)
   {
@@ -82,6 +79,10 @@ int main(int argc, char **argv)
         print("ERROR: A kernel driver is active on interface({})\n",InterfaceNum);
         
         status = libusb_detach_kernel_driver(device_handle, InterfaceNum);
+        if (status == 0)
+        {
+          interfaceNum = InterfaceNum;
+        }
         if (status != 0)
         {
           print("ERROR: Failed to detach kernel driver on interface({}), {}\n", InterfaceNum, libusb_strerror(status));
@@ -103,13 +104,32 @@ int main(int argc, char **argv)
     }
   }
 
+  status = libusb_claim_interface(device_handle, interfaceNum);
+  if (status == 0)
+  {
+    print("Succesful claimed interface({})!\n", interfaceNum);
+  }
+  else
+  {
+    print("ERROR: Failed to claim interface({}), {}\n", interfaceNum, libusb_strerror(status));
+  }
 
 
-  status = libusb_attach_kernel_driver(device_handle, 0);
   libusb_free_config_descriptor(config_desc);
+
+
+  /* Release interface number */
+  status = libusb_release_interface(device_handle, interfaceNum);
   if (status != 0)
   {
-    print("ERROR: Failed to attach kernel driver on interface(0), {}\n", libusb_strerror(status));
+    print("ERROR: Failed to release interface({}), {}\n", interfaceNum, libusb_strerror(status));
+  }
+
+  /* re attach the kernel driver again before closing */
+  status = libusb_attach_kernel_driver(device_handle, interfaceNum);
+  if (status != 0)
+  {
+    print("ERROR: Failed to attach kernel driver on interface({}), {}\n", interfaceNum, libusb_strerror(status));
   }
 
   libusb_close(device_handle);
